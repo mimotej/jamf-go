@@ -1,0 +1,9 @@
+run:
+  deadline: 5m
+linters:
+  enable:
+    - gofmt
+    - whitespace
+    - gci
+    - misspell
+  fast: false
