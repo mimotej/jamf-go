@@ -1,0 +1,30 @@
+name: PR
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+permissions:
+  pull-requests: write
+jobs:
+  test-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Test
+        uses: ./.github/actions/test
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v1.61.0
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Build and push
+        uses: ./.github/actions/build-docker
+        with: 
+          tags: "pr-${{ github.event.number }}-${{ github.sha }}"
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}

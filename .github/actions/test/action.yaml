@@ -1,0 +1,14 @@
+name: Test Go
+runs:
+  using: 'composite'
+  steps: 
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23.2'
+      - name: Install dependencies
+        shell: bash
+        run: go get .
+      - name: Test with the Go CLI
+        shell: bash
+        run: go test
