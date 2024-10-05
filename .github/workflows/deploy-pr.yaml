@@ -15,7 +15,7 @@ jobs:
         id: prepare-pr
         uses: ./.github/actions/prepare-pr
         with:
-          tag: "pr-${{ github.event.pull_request.number }}-${{ github.sha }}"
+          tag: "pr-${{ github.event.issue.number }}-latest"
           PAT: ${{ secrets.PAT }}
           repo: 'mimotej/jamf-manifests'
           file: 'values-dev.yaml'
@@ -23,14 +23,14 @@ jobs:
         uses: peter-evans/find-comment@v3
         id: fc
         with:
-          issue-number: ${{ github.event.pull_request.number }}
+          issue-number: ${{ github.event.issue.number }}
           comment-author: 'github-actions[bot]'
           body-includes: PR to updated deployment
       - name: Create or update comment
         uses: peter-evans/create-or-update-comment@v4
         with:
           comment-id: ${{ steps.fc.outputs.comment-id }}
-          issue-number: ${{ github.event.pull_request.number }}
+          issue-number: ${{ github.event.issue.number }}
           body: |
             Hello 👋
             ➡️ Here is PR to updated deployment: ${{ steps.prepare-pr.outputs.pr-link }}

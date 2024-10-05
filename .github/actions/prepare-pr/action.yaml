@@ -31,17 +31,15 @@ runs:
       shell: bash
       run: |
         cd $GITHUB_WORKSPACE/manifests
-    - name: Update image tag
-      id: update-image-tag
-      uses: mikefarah/yq@master
+    - name: Setup yq
+      id: setup-yq
+      uses: chrisdickinson/setup-yq@v1.0.1
       with:
-        cmd: yq -i '.image.tag' = "${{ inputs.tag }}" $GITHUB_WORKSPACE/manifests/apps/go-jamf/${{ inputs.file }}
-    - name: Update version
-      id: update-release-version
-      if: ${{ inputs.release }} == true
-      uses: mikefarah/yq@master
-      with:
-        cmd: yq -i '.appVersion' = "${{ inputs.release-version }}" $GITHUB_WORKSPACE/manifests/apps/go-jamf/Chart.yaml
+        yq-version: v4.25.3
+    - name: Bump image tag
+      shell: bash
+      run: |
+        yq -i '.image.tag = "${{ inputs.tag }}"' $GITHUB_WORKSPACE/manifests/apps/go-jamf/${{ inputs.file }}
     - name: Setup PR
       id: setup-pr
       uses: peter-evans/create-pull-request@v7
@@ -49,6 +47,7 @@ runs:
         token: ${{ inputs.PAT }}
         commit-message: "chore: Update go-jamf manifests tag: ${{ inputs.tag }}"
         branch: update-manifets
+        path: manifests
         delete-branch: true
         title: Update manifests
         body: |

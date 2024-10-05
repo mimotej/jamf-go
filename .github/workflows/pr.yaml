@@ -25,7 +25,7 @@ jobs:
         uses: ./.github/actions/build-docker
         id: build
         with: 
-          tag: "pr-${{ github.event.number }}-${{ github.sha }}"
+          tags: "mimotej/go-jamf:pr-${{ github.event.number }}-${{ github.event.commit_id }},mimotej/go-jamf:${{ github.event.number }}-latest"
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Find Comment
