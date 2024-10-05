@@ -1,4 +1,4 @@
-name: PR
+name: PR-deploy
 on:
   issue_comment:
     types: [created]
@@ -9,6 +9,8 @@ jobs:
     if: (github.event.issue.pull_request &&  contains(github.event.comment.body, '/deploy'))
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Prepare PR
         id: prepare-pr
         uses: ./.github/actions/prepare-pr
