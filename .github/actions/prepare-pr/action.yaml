@@ -35,13 +35,13 @@ runs:
       id: update-image-tag
       uses: mikefarah/yq@master
       with:
-        cmd: yq -i '.image.tag' = "${{ inputs.tag }}" apps/go-jamf/${{ inputs.file }}
+        cmd: yq -i '.image.tag' = "${{ inputs.tag }}" $GITHUB_WORKSPACE/manifests/apps/go-jamf/${{ inputs.file }}
     - name: Update version
       id: update-release-version
       if: ${{ inputs.release }} == true
       uses: mikefarah/yq@master
       with:
-        cmd: yq -i '.appVersion' = "${{ inputs.release-version }}" apps/go-jamf/Chart.yaml
+        cmd: yq -i '.appVersion' = "${{ inputs.release-version }}" $GITHUB_WORKSPACE/manifests/apps/go-jamf/Chart.yaml
     - name: Setup PR
       id: setup-pr
       uses: peter-evans/create-pull-request@v7

@@ -15,7 +15,7 @@ jobs:
         id: prepare-pr
         uses: ./.github/actions/prepare-pr
         with:
-          tag: pr-${{ github.event.number }}-${{ github.sha }}
+          tag: "pr-${{ github.event.pull_request.number }}-${{ github.sha }}"
           PAT: ${{ secrets.PAT }}
           repo: 'mimotej/jamf-manifests'
           file: 'values-dev.yaml'
