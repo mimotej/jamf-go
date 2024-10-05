@@ -11,11 +11,17 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: "Check if user has write access"
+        uses: "lannonbr/repo-permission-check-action@2.0.0"
+        with:
+          permission: "write"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Prepare PR
         id: prepare-pr
         uses: ./.github/actions/prepare-pr
         with:
-          tag: "pr-${{ github.event.issue.number }}-${{ github.sha }}"
+          tag: "pr-${{ github.event.issue.number }}-latest"
           PAT: ${{ secrets.PAT }}
           repo: 'mimotej/jamf-manifests'
           file: 'values-dev.yaml'
