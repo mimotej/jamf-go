@@ -1,15 +1,16 @@
 name: Build docker image
 description: Builds docker image and pushes it to dockerhub
 inputs:
-  tags:
+  tag:
     required: true
     default: 'latest'
   username:
     required: true
   password:
     required: true
-  token:
-    required: true
+outputs:
+  build-digest:
+    value: ${{ steps.build.outputs.digest }}
 runs:
   using: 'composite'
   steps: 
@@ -28,20 +29,4 @@ runs:
         with:
           context: .
           push: true
-          tags: mimotej/go-jamf:${{ inputs.tags }}
-      - name: Find Comment
-        uses: peter-evans/find-comment@v3
-        id: fc
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          comment-author: 'github-actions[bot]'
-          body-includes: Link to DockerHub image
-      - name: Create or update comment
-        uses: peter-evans/create-or-update-comment@v4
-        with:
-          comment-id: ${{ steps.fc.outputs.comment-id }}
-          issue-number: ${{ github.event.pull_request.number }}
-          body: |
-            📦 Link to DockerHub image: "https://hub.docker.com/layers/mimotej/go-jamf/${{ inputs.tags }}/images/${{ steps.build.outputs.digest }}"
-          edit-mode: replace
-          token: ${{ inputs.token}}
+          tags: mimotej/go-jamf:${{ inputs.tag }}

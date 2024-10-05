@@ -1,0 +1,37 @@
+name: PR
+on:
+  issue_comment:
+    types: [created]
+permissions:
+  pull-requests: write
+jobs:
+  deploy:
+    if: (github.event.issue.pull_request &&  contains(github.event.comment.body, '/deploy'))
+    runs-on: ubuntu-latest
+    steps:
+      - name: Prepare PR
+        id: prepare-pr
+        uses: ./.github/actions/prepare-pr
+        with:
+          tag: pr-${{ github.event.number }}-${{ github.sha }}
+          PAT: ${{ secrets.PAT }}
+          repo: 'mimotej/jamf-manifests'
+          file: 'values-dev.yaml'
+      - name: Find Comment
+        uses: peter-evans/find-comment@v3
+        id: fc
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: PR to updated deployment
+      - name: Create or update comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            Hello 👋
+            ➡️ Here is PR to updated deployment: ${{ steps.prepare-pr.outputs.pr-link }}
+            ✅ Just merge it to deploy new version.
+          edit-mode: replace
+          token: ${{ secrets.GITHUB_TOKEN }}      

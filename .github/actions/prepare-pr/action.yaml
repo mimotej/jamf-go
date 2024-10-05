@@ -1,0 +1,57 @@
+name: Prepare deployment
+description: Prepares deployment of the application PR
+inputs:
+  tag:
+    required: true
+    default: 'latest'
+  PAT:
+    required: true
+  repo:
+    required: true
+  file:
+    required: true
+    default:  values.yaml
+  release:
+    required: false
+    default: false
+  release-version:
+    required: false
+outputs:
+  pr-link:
+    value: ${{ steps.setup-pr.outputs.pull-request-url }}
+runs:
+  using: 'composite'
+  steps: 
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        repository: ${{ inputs.repo }}
+        path: 'manifests'
+    - name: Move to workspace folder
+      shell: bash
+      run: |
+        cd {{ $GITHUB_WORKSPACE }}/manifests
+    - name: Update image tag
+      id: update-image-tag
+      uses: mikefarah/yq@master
+      with:
+        cmd: yq -i '.image.tag' = "${{ inputs.tag }}" apps/go-jamf/${{ inputs.file }}
+    - name: Update version
+      id: update-release-version
+      if: ${{ inputs.release }} == true
+      uses: mikefarah/yq@master
+      with:
+        cmd: yq -i '.appVersion' = "${{ inputs.release-version }}" apps/go-jamf/Chart.yaml
+    - name: Setup PR
+      id: setup-pr
+      uses: peter-evans/create-pull-request@v7
+      with:
+        token: ${{ inputs.PAT }}
+        commit-message: "chore: Update go-jamf manifests tag: ${{ inputs.tag }}"
+        branch: update-manifets
+        delete-branch: true
+        title: Update manifests
+        body: |
+          This PR is automatically generated. Action that created this PR can be found here: https://github.com/mimotej/jamf-go/actions.
+
+        
