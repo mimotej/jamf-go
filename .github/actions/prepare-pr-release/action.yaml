@@ -52,7 +52,7 @@ runs:
         branch: update-manifests-release
         path: manifests-release
         delete-branch: true
-        title: Update manifests
+        title: Update manifests - go-jamf prod
         body: |
           This PR is automatically generated. Action that created this PR can be found here: https://github.com/mimotej/jamf-go/actions.
 
