@@ -1,9 +1,10 @@
 name: Release
-
 on:
   issues:
     types:
       - opened
+permissions:
+  issues: write
 jobs:
   verify-user:
     outputs:
