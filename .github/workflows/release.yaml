@@ -45,7 +45,7 @@ jobs:
         with:
           issue-number: ${{ github.event.issue.number }}
           body: |
-            👷‍♂️ Job started [here](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) hold tight!.
+            👷‍♂️ Job started [here](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) hold tight! 👷‍♂️
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   test-lint:
@@ -85,12 +85,12 @@ jobs:
           issue-number: ${{ github.event.issue.number }}
           comment-id: ${{ needs.verify-user.outputs.comment }}
           body: |
-            ✅ Tests ok!.✅
+            ✅ Tests ok! ✅
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   release:
     outputs:
-      comment: ${{ steps.comment-ok.outputs.comment-id }}
+      comment: ${{ steps.comment.outputs.comment-id }}
       release-version: ${{ steps.semantic-release.outputs.new_release_version }}
     runs-on: ubuntu-latest
     needs:
@@ -106,7 +106,7 @@ jobs:
           issue-number: ${{ github.event.issue.number }}
           comment-id: ${{ needs.test-lint.outputs.comment }}
           body: |
-            ✅ Preparing release.
+            ✅ Preparing release 📦
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Release via semantic-release
@@ -164,6 +164,7 @@ jobs:
           comment-id: ${{ needs.release.outputs.comment }}
           body: |
             ✅ Build done!
+            📜 Changelog can be found here: https://github.com/mimotej/jamf-go/releases/tag/v${{ needs.release.outputs.release-version }}
             📦 Link to DockerHub image: "https://hub.docker.com/layers/mimotej/go-jamf/${{ needs.release.outputs.release-version }}/images/${{ steps.build.outputs.build-digest }}"
             🏗️ Dev instance PR: ${{ steps.prepare-pr-dev.outputs.pr-link }}
             🖥️ Prod instance PR: ${{ steps.prepare-pr-release.outputs.pr-link }}
