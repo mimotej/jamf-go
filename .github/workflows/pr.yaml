@@ -25,7 +25,7 @@ jobs:
         uses: ./.github/actions/build-docker
         id: build
         with: 
-          tags: "mimotej/go-jamf:pr-${{ github.event.number }}-${{ github.event.commit_id }},mimotej/go-jamf:${{ github.event.number }}-latest"
+          tags: "mimotej/go-jamf:pr-${{ github.event.number }}-${{ github.sha }},mimotej/go-jamf:pr-${{ github.event.number }}-latest"
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Find Comment
@@ -35,12 +35,13 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           comment-author: 'github-actions[bot]'
           body-includes: Link to DockerHub image
+      
       - name: Create or update comment
         uses: peter-evans/create-or-update-comment@v4
         with:
           comment-id: ${{ steps.fc.outputs.comment-id }}
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-            📦 Link to DockerHub image: "https://hub.docker.com/layers/mimotej/go-jamf/pr-${{ github.event.number }}-${{ github.event.commit_id }}/images/${{ steps.build.outputs.build-digest }}"
+            📦 Link to DockerHub image: "https://hub.docker.com/layers/mimotej/go-jamf/pr-${{ github.event.number }}-${{ github.sha }}/images/${{ steps.build.outputs.build-digest }}"
           edit-mode: replace
           token: ${{ secrets.GITHUB_TOKEN }}

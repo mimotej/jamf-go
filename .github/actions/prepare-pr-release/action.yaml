@@ -11,6 +11,8 @@ inputs:
   file:
     required: true
     default:  values.yaml
+  release-version:
+    required: true
 outputs:
   pr-link:
     value: ${{ steps.setup-pr.outputs.pull-request-url }}
@@ -35,6 +37,12 @@ runs:
       shell: bash
       run: |
         yq -i '.image.tag = "${{ inputs.tag }}"' $GITHUB_WORKSPACE/manifests/apps/go-jamf/${{ inputs.file }}
+    - name: Update version
+      id: update-release-version
+      if: ${{ inputs.release }} == true
+      shell: bash
+      run: |
+        yq -i '.appVersion = "${{ inputs.release-version }}"' $GITHUB_WORKSPACE/manifests/apps/go-jamf/Chart.yaml
     - name: Setup PR
       id: setup-pr
       uses: peter-evans/create-pull-request@v7
