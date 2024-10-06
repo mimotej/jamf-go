@@ -114,8 +114,6 @@ jobs:
       - name: Release via semantic-release
         uses: cycjimmy/semantic-release-action@v4.1.1
         id: semantic-release
-        with:
-          repository_url: https://github.com/mimotej/jamf-go.git
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
       - name: Update comment
@@ -141,7 +139,7 @@ jobs:
         uses: ./.github/actions/build-docker
         id: build
         with: 
-          tags: "mimotej/go-jamf:${{ needs.release.outputs.release-version }},mimotej/go-jamf:$latest"
+          tags: "mimotej/go-jamf:${{ needs.release.outputs.release-version }},mimotej/go-jamf:latest"
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Prepare PR DEV
