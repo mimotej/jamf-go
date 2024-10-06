@@ -61,11 +61,9 @@ jobs:
       - name: Test
         id: test
         uses: ./.github/actions/test
-        continue-on-error: true
       - name: GolangCI lint
         id: lint
         uses: golangci/golangci-lint-action@v6
-        continue-on-error: true
         with:
           version: v1.61.0
       - name: Test build
@@ -73,7 +71,7 @@ jobs:
         uses: ./.github/actions/test-build
       - name: Update commment
         uses: peter-evans/close-issue@v2
-        if: (${{ success() }} || ${{ failure() }}) && (${{ steps.test.outcome }} == 'failure' || ${{ steps.lint.outcome }} == 'failure'  || ${{ steps.test-build.outcome }} == 'failure')
+        if: ${{ failure() }}
         id: comment-fail
         with:
           issue-number: ${{ github.event.issue.number }}
@@ -112,7 +110,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Release via semantic-release
-        uses: cycjimmy/semantic-release-action@v2
+        uses: cycjimmy/semantic-release-action@v4.1.1
         id: semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
