@@ -3,8 +3,6 @@ on:
   issues:
     types:
       - opened
-permissions:
-  issues: write
 jobs:
   verify-user:
     outputs:
@@ -115,7 +113,7 @@ jobs:
         uses: cycjimmy/semantic-release-action@v4.1.1
         id: semantic-release
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT  }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
       - name: Update comment
         uses: peter-evans/close-issue@v2
         if: ${{ steps.semantic.outputs.new_release_published != 'true' }}
