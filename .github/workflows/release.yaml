@@ -116,7 +116,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
       - name: Update comment
         uses: peter-evans/close-issue@v2
-        if: ${{ steps.semantic.outputs.new_release_published != 'true' }}
+        if: ${{ steps.semantic-release.outputs.new_release_published != 'true' }}
         with:
           issue-number: ${{ github.event.issue.number }}
           comment-id: ${{ steps.comment.outputs.comment-id }}
