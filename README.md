@@ -55,7 +55,7 @@ Then to run it use:
 docker run -p 8080:8080 go-jamf:latest
 ```
 
-Application is also being build as a part of CI pipeline in pull requests. Resulting images then can be found in [Dockerhub](https://hub.docker.com/repository/docker/mimotej/go-jamf/general). To deploy them to dev environment use `/deploy` in the PR, which will then open another pull request with this image in https://github.com/mimotej/jamf-manifests . After merging of this PR you will get new version of application in your dev environment.
+Application is also being build as a part of CI pipeline in pull requests. Resulting images then can be found in [Dockerhub](https://hub.docker.com/repository/docker/mimotej/go-jamf/general). To deploy them to dev environment use `/deploy` in the PR, which will then open another pull request with this image in https://github.com/mimotej/jamf-manifests . After merging of this PR you will get new version of application in your dev environment. To then release new version just open New release issue and let workflow do its job :) .
 
 ## :keyboard: Development setup
 
@@ -66,3 +66,8 @@ pip install pre-commit
 pre-commit install
 ```
 If you have any issues installing pre-commit feel free to consult [manual](https://pre-commit.com/index.html#install).
+
+
+## Important sources
+
+This application release process was inspired by release process of [peribolos as a service](https://github.com/operate-first/peribolos-as-a-service). Main inspiration was to utilize semantic release and to communicate current state of pipeline to user using issue comments, which makes it interactive and easier to understand.
