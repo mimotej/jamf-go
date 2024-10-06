@@ -1,4 +1,4 @@
-name: Test uild docker image
+name: Test build docker image
 description: Test builds docker image 
 runs:
   using: 'composite'
