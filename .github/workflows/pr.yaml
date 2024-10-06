@@ -29,6 +29,7 @@ jobs:
               - 'go.mod'
               - 'main.go'
               - 'main_test.go'  
+              - '**/*.go'
       - name: Build and push
         if: steps.changes.outputs.src == 'true'
         uses: ./.github/actions/build-docker
