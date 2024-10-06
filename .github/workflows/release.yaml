@@ -27,12 +27,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Close Issue
-        uses: peter-evans/close-issue@v2
+        uses: peter-evans/close-issue@v3
         if: ${{ !steps.access.outcome == 'failure' }}
         with:
           issue-number: ${{ github.event.issue.number }}
-          body: |
+          comment: |
             ✋ You do not have rights to run this action @${{ github.event.issue.user.id }}. ✋
+          labels: |
+            invalid
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Exit on failure
@@ -73,9 +75,10 @@ jobs:
         id: comment-fail
         with:
           issue-number: ${{ github.event.issue.number }}
-          comment-id: ${{ needs.verify-user.outputs.comment }}
-          body: |
+          comment: |
             ❌ Sorry tests failed!.❌
+          labels: |
+            invalid
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Update commment
@@ -114,14 +117,15 @@ jobs:
         id: semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
-      - name: Update comment
-        uses: peter-evans/close-issue@v2
+      - name: Close issue
+        uses: peter-evans/close-issue@v3
         if: ${{ steps.semantic-release.outputs.new_release_published != 'true' }}
         with:
           issue-number: ${{ github.event.issue.number }}
-          comment-id: ${{ steps.comment.outputs.comment-id }}
-          body: |
+          comment: |
             ⛔ No release needed, closing
+          labels: |
+            invalid
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   build:
@@ -157,8 +161,9 @@ jobs:
           repo: 'mimotej/jamf-manifests'
           file: 'values.yaml'
           release-version: "${{ needs.release.outputs.release-version }}"
-      - name: Create or update comment
-        uses: peter-evans/close-issue@v2
+      - name: Update commment
+        uses: peter-evans/create-or-update-comment@v2
+        id: comment
         with:
           issue-number: ${{ github.event.issue.number }}
           comment-id: ${{ needs.release.outputs.comment }}
@@ -168,7 +173,15 @@ jobs:
             📦 Link to DockerHub image: "https://hub.docker.com/layers/mimotej/go-jamf/${{ needs.release.outputs.release-version }}/images/${{ steps.build.outputs.build-digest }}"
             🏗️ Dev instance PR: ${{ steps.prepare-pr-dev.outputs.pr-link }}
             🖥️ Prod instance PR: ${{ steps.prepare-pr-release.outputs.pr-link }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Close issue
+        uses: peter-evans/close-issue@v3
+        with:
+          issue-number: ${{ github.event.issue.number }}
           token: ${{ secrets.GITHUB_TOKEN }}
+          labels: |
+            done
       
 
         
