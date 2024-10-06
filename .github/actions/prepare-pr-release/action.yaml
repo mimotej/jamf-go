@@ -23,11 +23,11 @@ runs:
       uses: actions/checkout@v4
       with:
         repository: ${{ inputs.repo }}
-        path: 'manifests'
+        path: 'manifests-release'
     - name: Move to workspace folder
       shell: bash
       run: |
-        cd $GITHUB_WORKSPACE/manifests
+        cd $GITHUB_WORKSPACE/manifests-release
     - name: Setup yq
       id: setup-yq
       uses: chrisdickinson/setup-yq@v1.0.1
@@ -36,13 +36,13 @@ runs:
     - name: Bump image tag
       shell: bash
       run: |
-        yq -i '.image.tag = "${{ inputs.tag }}"' $GITHUB_WORKSPACE/manifests/apps/go-jamf/${{ inputs.file }}
+        yq -i '.image.tag = "${{ inputs.tag }}"' $GITHUB_WORKSPACE/manifests-release/apps/go-jamf/${{ inputs.file }}
     - name: Update version
       id: update-release-version
       if: ${{ inputs.release }} == true
       shell: bash
       run: |
-        yq -i '.appVersion = "${{ inputs.release-version }}"' $GITHUB_WORKSPACE/manifests/apps/go-jamf/Chart.yaml
+        yq -i '.appVersion = "${{ inputs.release-version }}"' $GITHUB_WORKSPACE/manifests-release/apps/go-jamf/Chart.yaml
     - name: Setup PR
       id: setup-pr
       uses: peter-evans/create-pull-request@v7
