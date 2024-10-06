@@ -115,7 +115,7 @@ jobs:
         uses: cycjimmy/semantic-release-action@v4.1.1
         id: semantic-release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
+          GITHUB_TOKEN: ${{ secrets.PAT  }}
       - name: Update comment
         uses: peter-evans/close-issue@v2
         if: ${{ steps.semantic.outputs.new_release_published != 'true' }}
