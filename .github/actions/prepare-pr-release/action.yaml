@@ -49,8 +49,8 @@ runs:
       with:
         token: ${{ inputs.PAT }}
         commit-message: "chore: Update go-jamf manifests tag: ${{ inputs.tag }}"
-        branch: update-manifets-release
-        path: manifests
+        branch: update-manifests-release
+        path: manifests-release
         delete-branch: true
         title: Update manifests
         body: |
