@@ -9,7 +9,7 @@ import (
 
 
 func TestMainAPIEndpoint(t *testing.T){
-    expected := "Hello World!"
+    expected := "Hello World!!!"
     req := httptest.NewRequest(http.MethodGet, "/", nil)
     w := httptest.NewRecorder()
     HelloWorld(w, req)
